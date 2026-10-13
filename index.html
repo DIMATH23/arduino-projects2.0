@@ -76,6 +76,50 @@
             </div>
         </div>
 
+        <!-- Categories Icons Row (Arduino Hub Style) -->
+        <div class="border-y border-gray-100 py-4 overflow-x-auto">
+            <div class="flex items-center justify-between min-w-[700px] text-center text-xs font-semibold text-gray-600">
+                <button class="flex flex-col items-center gap-2 text-arduinoTeal border-b-2 border-arduinoTeal pb-1">
+                    <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-lg"><i class="fa-solid fa-border-all"></i></div>
+                    <span>All categories</span>
+                </button>
+                <button class="flex flex-col items-center gap-2 hover:text-arduinoTeal transition">
+                    <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-robot"></i></div>
+                    <span>Robotics</span>
+                </button>
+                <button class="flex flex-col items-center gap-2 hover:text-arduinoTeal transition">
+                    <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-wifi"></i></div>
+                    <span>Internet of Things</span>
+                </button>
+                <button class="flex flex-col items-center gap-2 hover:text-arduinoTeal transition">
+                    <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-house-chip"></i></div>
+                    <span>Home Automation</span>
+                </button>
+                <button class="flex flex-col items-center gap-2 hover:text-arduinoTeal transition">
+                    <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-microchip"></i></div>
+                    <span>Embedded</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="flex flex-wrap gap-3 items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+            <div class="flex-grow flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs">
+                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                <input type="text" placeholder="What do you want to make?" class="w-full focus:outline-none bg-transparent">
+            </div>
+            <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none">
+                <option>All products</option>
+                <option>Arduino Uno</option>
+                <option>ESP32</option>
+            </select>
+            <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none">
+                <option>Any difficulty</option>
+                <option>Beginner</option>
+                <option>Advanced</option>
+            </select>
+        </div>
+
         <!-- Project Cards Grid -->
         <section id="projectsGrid" class="space-y-4">
             <div class="flex justify-between items-center border-b border-gray-100 pb-2">
@@ -172,7 +216,8 @@
                 </button>
             </div>
 
-            <form id="commentForm" action="https://formspree.io/f/your_form_id" method="POST" class="hidden space-y-4">
+            <!-- Formspree Integration with real Form ID: meaelyjp -->
+            <form id="commentForm" action="https://formspree.io/f/meaelyjp" method="POST" class="hidden space-y-4">
                 <input type="hidden" name="sender_email" id="formSenderEmail">
                 <input type="hidden" name="sender_name" id="formSenderName">
 
@@ -266,276 +311,4 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Password</label>
-                    <input type="password" id="regPassword" required minlength="6" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
-                </div>
-                <button type="submit" class="w-full bg-arduinoTeal hover:bg-arduinoDarkTeal text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
-                    Create Account
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Script Section -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDEJtix_LjtlOJdu5dLQSfvvOEBPyc4va0",
-            authDomain: "arduinolab-5c1ba.firebaseapp.com",
-            projectId: "arduinolab-5c1ba",
-            storageBucket: "arduinolab-5c1ba.firebasestorage.app",
-            messagingSenderId: "384819898225",
-            appId: "1:384819898225:web:885ff890d4ddb059eab8d0",
-            measurementId: "G-06BZCW81EL"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-        let currentUser = { email: '', name: '', isAdmin: false };
-        let lastCommentTime = 0;
-        let currentLang = 'si';
-
-        const projectsData = {
-            pid: {
-                title: "PID Controlled Line Following Robot",
-                components: "Arduino Uno, L298N Motor Driver, 5-Channel IR Sensor Array, 2x DC Motors, 7.4V Li-ion Battery",
-                wiring: "IR Sensors -> Pins A0-A4 | L298N IN1-IN4 -> Pins 5,6,9,10 (PWM Speed Control)",
-                code: `// PID Line Follower Code by Dimath
-float Kp = 15, Ki = 0.05, Kd = 10;
-float error = 0, P = 0, I = 0, D = 0, previousError = 0;
-int baseSpeed = 150;
-
-void setup() {
-  pinMode(5, OUTPUT); pinMode(6, OUTPUT);
-  pinMode(9, OUTPUT); pinMode(10, OUTPUT);
-}
-
-void loop() {
-  int position = readSensors();
-  error = 2000 - position;
-  P = error;
-  I = I + error;
-  D = error - previousError;
-  float motorSpeed = (Kp * P) + (Ki * I) + (Kd * D);
-  previousError = error;
-
-  int leftSpeed = baseSpeed + motorSpeed;
-  int rightSpeed = baseSpeed - motorSpeed;
-  moveMotors(leftSpeed, rightSpeed);
-}`
-            },
-            esp32: {
-                title: "ESP32 Wi-Fi Vehicle with Ultrasonic Braking",
-                components: "ESP32 DevKit, HC-SR04 Ultrasonic Sensor, L298N Motor Driver, Web Dashboard",
-                wiring: "Trig -> Pin 5 | Echo -> Pin 18 | Motor Driver -> Pins 12,13,14,27",
-                code: `// ESP32 Web Server Robot Code by Dimath
-#include <WiFi.h>
-#include <WebServer.h>
-
-const char* ssid = "ArduinoLab_WiFi";
-WebServer server(80);
-
-void setup() {
-  WiFi.softAP(ssid, "12345678");
-  server.on("/", []() { server.send(200, "text/html", "<h1>ESP32 Control Dashboard</h1>"); });
-  server.begin();
-}
-
-void loop() {
-  server.handleClient();
-}`
-            },
-            plant: {
-                title: "Automated Smart Plant Irrigation System",
-                components: "Arduino Nano, Soil Moisture Sensor, 5V Relay Module, Mini Water Pump, OLED Display",
-                wiring: "Soil Sensor -> Pin A0 | Relay -> Pin 3 | OLED I2C -> Pins A4 (SDA), A5 (SCL)",
-                code: `// Smart Plant Irrigation Code by Dimath
-int moisturePin = A0;
-int relayPin = 3;
-
-void setup() {
-  pinMode(relayPin, OUTPUT);
-  digitalWrite(relayPin, HIGH);
-}
-
-void loop() {
-  int val = analogRead(moisturePin);
-  if (val > 700) {
-    digitalWrite(relayPin, LOW);
-  } else {
-    digitalWrite(relayPin, HIGH);
-  }
-  delay(2000);
-}`
-            },
-            bluetooth: {
-                title: "Arduino HC-05 Bluetooth Home Automation",
-                components: "Arduino Uno, HC-05 Bluetooth Module, 4-Channel Relay Module, Android App",
-                wiring: "HC-05 TX -> Arduino RX (Pin 0) | HC-05 RX -> Arduino TX (Pin 1) | Relays -> Pins 4,5,6,7",
-                code: `// HC-05 Bluetooth Control Code by Dimath
-char data;
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(4, OUTPUT);
-}
-
-void loop() {
-  if (Serial.available() > 0) {
-    data = Serial.read();
-    if (data == '1') digitalWrite(4, HIGH);
-    else if (data == '0') digitalWrite(4, LOW);
-  }
-}`
-            }
-        };
-
-        function openProjectModal(key) {
-            const p = projectsData[key];
-            if (!p) return;
-
-            document.getElementById('projectModalContent').innerHTML = `
-                <h2 class="text-xl font-bold text-gray-900">${p.title}</h2>
-                <div class="bg-slate-50 p-3 rounded-lg border text-xs space-y-1">
-                    <p class="font-semibold text-arduinoTeal">🔧 Components Used:</p>
-                    <p class="text-gray-600">${p.components}</p>
-                    <p class="font-semibold text-arduinoTeal mt-2">🔌 Wiring Connections:</p>
-                    <p class="text-gray-600">${p.wiring}</p>
-                </div>
-                <div class="space-y-1">
-                    <span class="text-xs font-bold text-gray-700">💻 Arduino C++ Source Code:</span>
-                    <pre class="bg-gray-900 text-green-400 p-4 rounded-xl text-xs overflow-x-auto font-mono">${p.code}</pre>
-                </div>
-            `;
-            document.getElementById('projectModal').classList.remove('hidden');
-        }
-
-        function closeProjectModal() {
-            document.getElementById('projectModal').classList.add('hidden');
-        }
-
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser.email = user.email || '';
-                currentUser.name = user.displayName || user.email.split('@')[0];
-
-                const emailHash = await sha256(currentUser.email.toLowerCase().trim());
-                if (user.email === "dimaththulsara@gmail.com" || emailHash === "b03f0b27b3d301dba81387fb840e698889b94098939a3f29ffb5749f9df36b41") {
-                    currentUser.isAdmin = true;
-                } else {
-                    currentUser.isAdmin = false;
-                }
-
-                document.getElementById('formSenderEmail').value = currentUser.email;
-                document.getElementById('formSenderName').value = currentUser.name;
-
-                document.getElementById('authPromptBox').classList.add('hidden');
-                document.getElementById('commentForm').classList.remove('hidden');
-                
-                document.getElementById('loginNavBtn').classList.add('hidden');
-                document.getElementById('userLoggedInNav').classList.remove('hidden');
-                
-                let badge = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : '';
-                document.getElementById('navUserName').innerHTML = `👤 ${currentUser.name}${badge}`;
-
-                closeAuthModal();
-            } else {
-                currentUser = { email: '', name: '', isAdmin: false };
-                document.getElementById('authPromptBox').classList.remove('hidden');
-                document.getElementById('commentForm').classList.add('hidden');
-                
-                document.getElementById('loginNavBtn').classList.remove('hidden');
-                document.getElementById('userLoggedInNav').classList.add('hidden');
-            }
-        });
-
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
-
-        function switchAuthTab(tab) {
-            if(tab === 'login') {
-                document.getElementById('emailLoginForm').classList.remove('hidden');
-                document.getElementById('emailRegisterForm').classList.add('hidden');
-                document.getElementById('tabLogin').className = "w-1/2 py-2 border-b-2 border-arduinoTeal text-arduinoTeal";
-                document.getElementById('tabRegister').className = "w-1/2 py-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600";
-            } else {
-                document.getElementById('emailLoginForm').classList.add('hidden');
-                document.getElementById('emailRegisterForm').classList.remove('hidden');
-                document.getElementById('tabRegister').className = "w-1/2 py-2 border-b-2 border-arduinoTeal text-arduinoTeal";
-                document.getElementById('tabLogin').className = "w-1/2 py-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600";
-            }
-        }
-
-        window.loginWithGoogle = function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch((err) => alert("Google Sign-In Error: " + err.message));
-        };
-
-        window.handleEmailLogin = function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            auth.signInWithEmailAndPassword(email, pass).catch((err) => alert("Login Error: " + err.message));
-        };
-
-        window.handleEmailRegister = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPassword').value;
-
-            auth.createUserWithEmailAndPassword(email, pass).then((res) => {
-                res.user.updateProfile({ displayName: name });
-            }).catch((err) => alert("Registration Error: " + err.message));
-        };
-
-        window.logoutUser = function() {
-            auth.signOut();
-        };
-
-        function sanitizeInput(str) {
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-        }
-
-        document.getElementById('commentForm').addEventListener('submit', function(e) {
-            const now = Date.now();
-            if (now - lastCommentTime < 10000) {
-                e.preventDefault();
-                alert("Spam Protection: Please wait 10 seconds before posting another comment.");
-                return;
-            }
-            lastCommentTime = now;
-
-            const text = sanitizeInput(document.getElementById('userComment').value.trim());
-            if(!text) return;
-
-            const cmtElement = document.createElement('div');
-            cmtElement.className = "bg-white p-3.5 rounded-xl border border-gray-200 text-xs space-y-1 shadow-sm";
-            let badgeHtml = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : '';
-
-            cmtElement.innerHTML = `
-                <div class="flex justify-between font-bold text-gray-800">
-                    <span>${currentUser.name}${badgeHtml}</span>
-                    <span class="text-[10px] text-gray-400">Just now</span>
-                </div>
-                <p class="text-gray-600 leading-relaxed">${text}</p>
-            `;
-
-            document.getElementById('commentsList').prepend(cmtElement);
-        });
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'si' ? 'en' : 'si';
-            document.querySelectorAll('[data-si]').forEach(el => {
-                el.innerText = el.getAttribute(`data-${currentLang}`);
-            });
-        }
-    </script>
-</body>
-</html>
+                    <input type="password" id="regPassword" required minlength="6" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTe
