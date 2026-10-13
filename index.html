@@ -3,96 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arduino Lab | Dimath</title>
+    <title>Arduino Lab by Dimath | Project Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs (Compat version for HTML script tags) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brandTeal: '#005975',
-                        brandTealDark: '#004258',
-                        brandAccent: '#0083a9',
+                        arduinoTeal: '#00878F',
+                        arduinoDarkTeal: '#005C61',
+                        arduinoLightBg: '#F4F6F8',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-white text-gray-800 font-sans antialiased flex flex-col min-h-screen">
 
-    <header class="bg-brandTeal text-white sticky top-0 z-40 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-            <a href="#" class="text-xl font-extrabold tracking-tight">⚡ Arduino Lab by Dimath</a>
-            <div class="text-xs bg-brandTealDark px-3 py-1 rounded">
-                <span id="headerUserStatus">Not Logged In</span>
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-gray-200 sticky top-0 z-40 bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <div class="flex items-center gap-4">
+                <div class="bg-arduinoTeal text-white p-2 rounded-lg font-bold flex items-center justify-center w-10 h-10 text-xl shadow">
+                    ∞
+                </div>
+                <div>
+                    <a href="#" class="text-xl font-extrabold tracking-tight text-gray-900 uppercase">
+                        ARDUINO <span class="text-arduinoTeal">LAB</span>
+                    </a>
+                    <p class="text-[10px] font-bold text-gray-400 tracking-widest -mt-1">BY DIMATH</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleLanguage()" class="text-xs border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded-full transition font-medium">
+                    🌐 EN / SI
+                </button>
+
+                <div id="navAuthArea">
+                    <button onclick="openAuthModal()" id="loginNavBtn" class="bg-arduinoTeal hover:bg-arduinoDarkTeal text-white font-bold text-xs px-4 py-2 rounded-lg transition shadow-sm">
+                        <i class="fa-solid fa-user mr-1.5"></i> Login
+                    </button>
+                    <div id="userLoggedInNav" class="hidden flex items-center gap-2 text-xs">
+                        <span id="navUserName" class="font-bold text-arduinoTeal"></span>
+                        <button onclick="logoutUser()" class="text-red-500 hover:underline text-[11px] font-semibold ml-1">Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full space-y-8">
-        
-        <!-- About Section -->
-        <section class="bg-slate-50 border border-slate-200 rounded-xl p-6 space-y-3">
-            <h1 class="text-2xl font-bold text-gray-900">ආයුබෝවන්! මම Dimath 🚀</h1>
-            <p class="text-gray-700 text-sm">මගේ Arduino Games සහ Hardware Projects වෙබ් අඩවියට සාදරයෙන් පිළිගනිමි. Feedback එවීමට පහතින් Google මඟින් Log වන්න.</p>
-            <p class="text-xs text-brandTeal font-bold">✉️ Admin Email: dimaththulsara@gmail.com</p>
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-8">
+
+        <!-- Banner -->
+        <div class="bg-gradient-to-r from-teal-600 to-arduinoTeal text-white rounded-2xl p-6 md:p-8 flex flex-col justify-between shadow-md relative overflow-hidden">
+            <div class="z-10 space-y-2 max-w-2xl">
+                <span class="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full uppercase tracking-wider">Arduino Lab Portfolio</span>
+                <h2 class="text-2xl md:text-3xl font-black" data-si="Arduino, ESP32 සහ Embedded Robotics Hub" data-en="Arduino, ESP32 & Embedded Robotics Hub">
+                    Arduino, ESP32 සහ Embedded Robotics Hub
+                </h2>
+                <p class="text-xs md:text-sm text-teal-100 leading-relaxed" data-si="මෙහිදී ම විසින් නිර්මාණය කරන ලද Arduino සහ ESP32 ප්‍රොජෙක්ට්වල සියලුම Circuit Diagrams සහ C++ Codes නොමිලේ ලබාගත හැක." data-en="Access complete source code, circuit wiring diagrams, and tutorials created by Dimath.">
+                    මෙහිදී ම විසින් නිර්මාණය කරන ලද Arduino සහ ESP32 ප්‍රොජෙක්ට්වල සියලුම Circuit Diagrams සහ C++ Codes නොමිලේ ලබාගත හැක.
+                </p>
+            </div>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <section id="projectsGrid" class="space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                <h3 class="font-extrabold text-gray-900 text-lg">Featured Hardware Projects</h3>
+                <span class="text-xs text-gray-400">4 Complete Guides</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Card 1: PID Line Follower -->
+                <article onclick="openProjectModal('pid')" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="bg-slate-100 h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=600&auto=format&fit=crop&q=80" alt="PID Line Follower" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-2 right-2 bg-arduinoTeal text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">Robotics</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-gray-900 group-hover:text-arduinoTeal transition line-clamp-2">PID Controlled Line Following Robot</h4>
+                            <p class="text-[11px] text-gray-500">Arduino Uno + L298N + 5-IR Sensors</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px] text-arduinoTeal font-bold">
+                        <span>Read Code & Circuit →</span>
+                    </div>
+                </article>
+
+                <!-- Card 2: ESP32 Wi-Fi Vehicle -->
+                <article onclick="openProjectModal('esp32')" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="bg-slate-100 h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80" alt="ESP32 Vehicle" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-2 right-2 bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">IoT Web</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-gray-900 group-hover:text-arduinoTeal transition line-clamp-2">ESP32 Dynamic Web Controlled Robot</h4>
+                            <p class="text-[11px] text-gray-500">Wi-Fi Dashboard + Ultrasonic Braking</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px] text-arduinoTeal font-bold">
+                        <span>Read Code & Circuit →</span>
+                    </div>
+                </article>
+
+                <!-- Card 3: Smart Plant Watering -->
+                <article onclick="openProjectModal('plant')" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="bg-slate-100 h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600&auto=format&fit=crop&q=80" alt="Smart Plant" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-2 right-2 bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">Automation</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-gray-900 group-hover:text-arduinoTeal transition line-clamp-2">Automated Smart Plant Irrigation System</h4>
+                            <p class="text-[11px] text-gray-500">Soil Moisture Sensor + Relay + OLED</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px] text-arduinoTeal font-bold">
+                        <span>Read Code & Circuit →</span>
+                    </div>
+                </article>
+
+                <!-- Card 4: HC-05 Bluetooth -->
+                <article onclick="openProjectModal('bluetooth')" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="bg-slate-100 h-44 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&auto=format&fit=crop&q=80" alt="Bluetooth Control" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-2 right-2 bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">Wireless</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-gray-900 group-hover:text-arduinoTeal transition line-clamp-2">Arduino HC-05 Bluetooth Home Automation</h4>
+                            <p class="text-[11px] text-gray-500">Serial Comm + Android App Switch</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-2 border-t border-gray-50 flex items-center justify-between text-[11px] text-arduinoTeal font-bold">
+                        <span>Read Code & Circuit →</span>
+                    </div>
+                </article>
+
+            </div>
         </section>
 
-        <!-- Wix Style Google Auth / Comment Section -->
-        <section id="contact" class="max-w-md mx-auto bg-white border border-gray-200 p-8 rounded-2xl shadow-xl text-center space-y-6">
-            
-            <!-- Login View -->
-            <div id="loginBox" class="space-y-4">
-                <h3 class="text-2xl font-extrabold text-gray-900">Sign up / Log in</h3>
-                <p class="text-xs text-gray-500">Continue securely with your Google Account</p>
-                
-                <button type="button" onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-lg text-sm font-semibold text-gray-700 transition shadow-sm">
-                    <i class="fa-brands fa-google text-red-500 text-lg"></i> Continue with Google
+        <!-- Q&A Section -->
+        <section class="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-6 shadow-sm">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-4">
+                <h3 class="text-base font-extrabold text-gray-900" data-si="💬 Community Q&A සහ අදහස්" data-en="💬 Community Discussion & Q&A">💬 Community Q&A සහ අදහස්</h3>
+                <span class="text-xs text-gray-400">Spam Protected (10s)</span>
+            </div>
+
+            <div id="authPromptBox" class="bg-white border border-dashed border-gray-300 rounded-xl p-6 text-center space-y-3">
+                <p class="text-xs text-gray-600" data-si="ප්‍රශ්න යොමු කිරීම සහ අදහස් දැක්වීම සඳහා කරුණාකර Log වන්න." data-en="Please sign in to post questions and comments.">
+                    ප්‍රශ්න යොමු කිරීම සහ අදහස් දැක්වීම සඳහා කරුණාකර Log වන්න.
+                </p>
+                <button onclick="openAuthModal()" class="bg-arduinoTeal hover:bg-arduinoDarkTeal text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow transition">
+                    Sign In / Log In
                 </button>
             </div>
 
-            <!-- Comment Box (Hidden until logged in) -->
-            <div id="commentSection" class="hidden space-y-4 text-left">
-                <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-gray-200">
-                    <span id="userDisplay" class="text-xs font-bold text-brandTeal">Welcome</span>
-                    <button onclick="logoutUser()" class="text-xs text-rose-600 hover:underline font-semibold">Logout</button>
+            <form id="commentForm" action="https://formspree.io/f/your_form_id" method="POST" class="hidden space-y-4">
+                <input type="hidden" name="sender_email" id="formSenderEmail">
+                <input type="hidden" name="sender_name" id="formSenderName">
+
+                <textarea name="message" id="userComment" rows="3" required maxlength="500" placeholder="Type your hardware project question..." class="w-full border border-gray-300 rounded-xl p-3 text-xs focus:outline-none focus:border-arduinoTeal"></textarea>
+
+                <div class="flex items-center justify-between text-xs bg-white p-3 rounded-lg border border-gray-200">
+                    <label class="flex items-center gap-2 cursor-pointer text-gray-600">
+                        <input type="checkbox" id="notRobot" required class="w-4 h-4 rounded text-arduinoTeal">
+                        <span data-si="මම රොබෝවෙක් නොවේ" data-en="I am not a robot">මම රොබෝවෙක් නොවේ</span>
+                    </label>
+                    <span class="text-[10px] text-gray-400">reCAPTCHA</span>
                 </div>
 
-                <!-- Formspree Integration to send message to dimaththulsara@gmail.com -->
-                <form id="commentForm" action="https://formspree.io/f/your_form_id" method="POST" class="space-y-3">
-                    <input type="hidden" name="sender_email" id="formSenderEmail">
-                    <input type="hidden" name="sender_name" id="formSenderName">
+                <button type="submit" id="submitCommentBtn" class="w-full bg-arduinoTeal hover:bg-arduinoDarkTeal text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    Post Comment & Notify Admin
+                </button>
+            </form>
 
-                    <textarea name="message" id="userComment" rows="3" required maxlength="500" placeholder="Type your project question or feedback..." class="w-full border border-gray-300 rounded-lg p-3 text-xs focus:outline-none focus:border-brandTeal"></textarea>
-
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200 flex items-center justify-between text-xs">
-                        <label class="flex items-center gap-2 cursor-pointer text-gray-600">
-                            <input type="checkbox" id="notRobot" required class="w-4 h-4 rounded text-brandTeal">
-                            <span>I'm not a robot</span>
-                        </label>
-                        <span class="text-[10px] text-gray-400">reCAPTCHA</span>
-                    </div>
-
-                    <button type="submit" class="w-full bg-brandTeal hover:bg-brandTealDark text-white font-bold py-2.5 rounded-lg text-xs transition">
-                        Post Comment & Notify Admin
-                    </button>
-                </form>
-            </div>
-
-            <div id="commentsList" class="space-y-3 pt-4 border-t border-gray-100 text-left"></div>
+            <div id="commentsList" class="space-y-3"></div>
         </section>
+
     </main>
 
-    <!-- Firebase Script Logic -->
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 text-xs py-8 border-t border-gray-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© 2026 Arduino Lab by Dimath. All rights reserved.</p>
+            <p class="text-gray-500">Contact Admin: <span class="text-gray-300">dimaththulsara@gmail.com</span></p>
+        </div>
+    </footer>
+
+    <!-- Full Project Viewer Modal -->
+    <div id="projectModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-6 space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">
+                ✕
+            </button>
+            <div id="projectModalContent" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- Auth Popup Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 space-y-5 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <h3 class="text-xl font-extrabold text-gray-900">Sign Up / Log In</h3>
+                <p class="text-xs text-gray-500">Access features on Arduino Lab</p>
+            </div>
+
+            <button type="button" onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-slate-50 py-2.5 rounded-xl text-xs font-semibold text-gray-700 transition shadow-sm">
+                <i class="fa-brands fa-google text-red-500 text-base"></i> Continue with Google
+            </button>
+
+            <div class="flex items-center my-2">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="px-3 text-[10px] text-gray-400 uppercase tracking-widest font-bold">OR</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <div class="flex border-b border-gray-200 text-xs font-bold text-center">
+                <button id="tabLogin" onclick="switchAuthTab('login')" class="w-1/2 py-2 border-b-2 border-arduinoTeal text-arduinoTeal">Log In</button>
+                <button id="tabRegister" onclick="switchAuthTab('register')" class="w-1/2 py-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600">Register</button>
+            </div>
+
+            <form id="emailLoginForm" onsubmit="handleEmailLogin(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Password</label>
+                    <input type="password" id="loginPassword" required class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
+                </div>
+                <button type="submit" class="w-full bg-arduinoTeal hover:bg-arduinoDarkTeal text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    Log In with Email
+                </button>
+            </form>
+
+            <form id="emailRegisterForm" onsubmit="handleEmailRegister(event)" class="hidden space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Full Name</label>
+                    <input type="text" id="regName" required class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Email</label>
+                    <input type="email" id="regEmail" required class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Password</label>
+                    <input type="password" id="regPassword" required minlength="6" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs focus:outline-none focus:border-arduinoTeal">
+                </div>
+                <button type="submit" class="w-full bg-arduinoTeal hover:bg-arduinoDarkTeal text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Section -->
     <script>
-        // Your actual Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDEJtix_LjtlOJdu5dLQSfvvOEBPyc4va0",
             authDomain: "arduinolab-5c1ba.firebaseapp.com",
@@ -107,67 +291,251 @@
         const auth = firebase.auth();
 
         let currentUser = { email: '', name: '', isAdmin: false };
+        let lastCommentTime = 0;
+        let currentLang = 'si';
 
-        // Google Popup Login Function
-        window.loginWithGoogle = function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => {
-                const user = result.user;
-                currentUser.email = user.email;
-                currentUser.name = user.displayName;
+        const projectsData = {
+            pid: {
+                title: "PID Controlled Line Following Robot",
+                components: "Arduino Uno, L298N Motor Driver, 5-Channel IR Sensor Array, 2x DC Motors, 7.4V Li-ion Battery",
+                wiring: "IR Sensors -> Pins A0-A4 | L298N IN1-IN4 -> Pins 5,6,9,10 (PWM Speed Control)",
+                code: `// PID Line Follower Code by Dimath
+float Kp = 15, Ki = 0.05, Kd = 10;
+float error = 0, P = 0, I = 0, D = 0, previousError = 0;
+int baseSpeed = 150;
 
-                // Check if you are the admin based on your email
-                if (user.email === "dimaththulsara@gmail.com") {
+void setup() {
+  pinMode(5, OUTPUT); pinMode(6, OUTPUT);
+  pinMode(9, OUTPUT); pinMode(10, OUTPUT);
+}
+
+void loop() {
+  int position = readSensors();
+  error = 2000 - position;
+  P = error;
+  I = I + error;
+  D = error - previousError;
+  float motorSpeed = (Kp * P) + (Ki * I) + (Kd * D);
+  previousError = error;
+
+  int leftSpeed = baseSpeed + motorSpeed;
+  int rightSpeed = baseSpeed - motorSpeed;
+  moveMotors(leftSpeed, rightSpeed);
+}`
+            },
+            esp32: {
+                title: "ESP32 Wi-Fi Vehicle with Ultrasonic Braking",
+                components: "ESP32 DevKit, HC-SR04 Ultrasonic Sensor, L298N Motor Driver, Web Dashboard",
+                wiring: "Trig -> Pin 5 | Echo -> Pin 18 | Motor Driver -> Pins 12,13,14,27",
+                code: `// ESP32 Web Server Robot Code by Dimath
+#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "ArduinoLab_WiFi";
+WebServer server(80);
+
+void setup() {
+  WiFi.softAP(ssid, "12345678");
+  server.on("/", []() { server.send(200, "text/html", "<h1>ESP32 Control Dashboard</h1>"); });
+  server.begin();
+}
+
+void loop() {
+  server.handleClient();
+}`
+            },
+            plant: {
+                title: "Automated Smart Plant Irrigation System",
+                components: "Arduino Nano, Soil Moisture Sensor, 5V Relay Module, Mini Water Pump, OLED Display",
+                wiring: "Soil Sensor -> Pin A0 | Relay -> Pin 3 | OLED I2C -> Pins A4 (SDA), A5 (SCL)",
+                code: `// Smart Plant Irrigation Code by Dimath
+int moisturePin = A0;
+int relayPin = 3;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, HIGH);
+}
+
+void loop() {
+  int val = analogRead(moisturePin);
+  if (val > 700) {
+    digitalWrite(relayPin, LOW);
+  } else {
+    digitalWrite(relayPin, HIGH);
+  }
+  delay(2000);
+}`
+            },
+            bluetooth: {
+                title: "Arduino HC-05 Bluetooth Home Automation",
+                components: "Arduino Uno, HC-05 Bluetooth Module, 4-Channel Relay Module, Android App",
+                wiring: "HC-05 TX -> Arduino RX (Pin 0) | HC-05 RX -> Arduino TX (Pin 1) | Relays -> Pins 4,5,6,7",
+                code: `// HC-05 Bluetooth Control Code by Dimath
+char data;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(4, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    data = Serial.read();
+    if (data == '1') digitalWrite(4, HIGH);
+    else if (data == '0') digitalWrite(4, LOW);
+  }
+}`
+            }
+        };
+
+        function openProjectModal(key) {
+            const p = projectsData[key];
+            if (!p) return;
+
+            document.getElementById('projectModalContent').innerHTML = `
+                <h2 class="text-xl font-bold text-gray-900">${p.title}</h2>
+                <div class="bg-slate-50 p-3 rounded-lg border text-xs space-y-1">
+                    <p class="font-semibold text-arduinoTeal">🔧 Components Used:</p>
+                    <p class="text-gray-600">${p.components}</p>
+                    <p class="font-semibold text-arduinoTeal mt-2">🔌 Wiring Connections:</p>
+                    <p class="text-gray-600">${p.wiring}</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-gray-700">💻 Arduino C++ Source Code:</span>
+                    <pre class="bg-gray-900 text-green-400 p-4 rounded-xl text-xs overflow-x-auto font-mono">${p.code}</pre>
+                </div>
+            `;
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser.email = user.email || '';
+                currentUser.name = user.displayName || user.email.split('@')[0];
+
+                const emailHash = await sha256(currentUser.email.toLowerCase().trim());
+                if (user.email === "dimaththulsara@gmail.com" || emailHash === "b03f0b27b3d301dba81387fb840e698889b94098939a3f29ffb5749f9df36b41") {
                     currentUser.isAdmin = true;
+                } else {
+                    currentUser.isAdmin = false;
                 }
 
                 document.getElementById('formSenderEmail').value = currentUser.email;
                 document.getElementById('formSenderName').value = currentUser.name;
 
-                document.getElementById('loginBox').classList.add('hidden');
-                document.getElementById('commentSection').classList.remove('hidden');
-                updateUserHeader();
-            }).catch((error) => {
-                alert("Google Login Failed: " + error.message);
-            });
+                document.getElementById('authPromptBox').classList.add('hidden');
+                document.getElementById('commentForm').classList.remove('hidden');
+                
+                document.getElementById('loginNavBtn').classList.add('hidden');
+                document.getElementById('userLoggedInNav').classList.remove('hidden');
+                
+                let badge = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : '';
+                document.getElementById('navUserName').innerHTML = `👤 ${currentUser.name}${badge}`;
+
+                closeAuthModal();
+            } else {
+                currentUser = { email: '', name: '', isAdmin: false };
+                document.getElementById('authPromptBox').classList.remove('hidden');
+                document.getElementById('commentForm').classList.add('hidden');
+                
+                document.getElementById('loginNavBtn').classList.remove('hidden');
+                document.getElementById('userLoggedInNav').classList.add('hidden');
+            }
+        });
+
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+
+        function switchAuthTab(tab) {
+            if(tab === 'login') {
+                document.getElementById('emailLoginForm').classList.remove('hidden');
+                document.getElementById('emailRegisterForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "w-1/2 py-2 border-b-2 border-arduinoTeal text-arduinoTeal";
+                document.getElementById('tabRegister').className = "w-1/2 py-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+            } else {
+                document.getElementById('emailLoginForm').classList.add('hidden');
+                document.getElementById('emailRegisterForm').classList.remove('hidden');
+                document.getElementById('tabRegister').className = "w-1/2 py-2 border-b-2 border-arduinoTeal text-arduinoTeal";
+                document.getElementById('tabLogin').className = "w-1/2 py-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600";
+            }
+        }
+
+        window.loginWithGoogle = function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch((err) => alert("Google Sign-In Error: " + err.message));
+        };
+
+        window.handleEmailLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            auth.signInWithEmailAndPassword(email, pass).catch((err) => alert("Login Error: " + err.message));
+        };
+
+        window.handleEmailRegister = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPassword').value;
+
+            auth.createUserWithEmailAndPassword(email, pass).then((res) => {
+                res.user.updateProfile({ displayName: name });
+            }).catch((err) => alert("Registration Error: " + err.message));
         };
 
         window.logoutUser = function() {
-            auth.signOut().then(() => {
-                currentUser = { email: '', name: '', isAdmin: false };
-                document.getElementById('loginBox').classList.remove('hidden');
-                document.getElementById('commentSection').classList.add('hidden');
-                document.getElementById('headerUserStatus').innerText = "Not Logged In";
-            });
+            auth.signOut();
         };
 
-        function updateUserHeader() {
-            let badge = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black ml-1">ADMIN</span>' : '';
-            document.getElementById('userDisplay').innerHTML = `👤 ${currentUser.name} (${currentUser.email})${badge}`;
-            document.getElementById('headerUserStatus').innerText = currentUser.name;
+        function sanitizeInput(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
 
-        // Comment form submission
         document.getElementById('commentForm').addEventListener('submit', function(e) {
-            const text = document.getElementById('userComment').value.trim();
+            const now = Date.now();
+            if (now - lastCommentTime < 10000) {
+                e.preventDefault();
+                alert("Spam Protection: Please wait 10 seconds before posting another comment.");
+                return;
+            }
+            lastCommentTime = now;
+
+            const text = sanitizeInput(document.getElementById('userComment').value.trim());
             if(!text) return;
 
             const cmtElement = document.createElement('div');
-            cmtElement.className = "bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs space-y-1";
-            let badgeHtml = currentUser.isAdmin ? '<span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black ml-1">ADMIN</span>' : '';
-            
+            cmtElement.className = "bg-white p-3.5 rounded-xl border border-gray-200 text-xs space-y-1 shadow-sm";
+            let badgeHtml = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black">ADMIN</span>' : '';
+
             cmtElement.innerHTML = `
                 <div class="flex justify-between font-bold text-gray-800">
                     <span>${currentUser.name}${badgeHtml}</span>
                     <span class="text-[10px] text-gray-400">Just now</span>
                 </div>
-                <p class="text-gray-600">${text}</p>
+                <p class="text-gray-600 leading-relaxed">${text}</p>
             `;
 
             document.getElementById('commentsList').prepend(cmtElement);
-            document.getElementById('userComment').value = '';
-            document.getElementById('notRobot').checked = false;
         });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'si' ? 'en' : 'si';
+            document.querySelectorAll('[data-si]').forEach(el => {
+                el.innerText = el.getAttribute(`data-${currentLang}`);
+            });
+        }
     </script>
 </body>
 </html>
