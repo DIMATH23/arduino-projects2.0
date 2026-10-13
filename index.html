@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Lab | Dimath</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs (Compat version for HTML script tags) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandTeal: '#005975',
+                        brandTealDark: '#004258',
+                        brandAccent: '#0083a9',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <header class="bg-brandTeal text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <a href="#" class="text-xl font-extrabold tracking-tight">⚡ Arduino Lab by Dimath</a>
+            <div class="text-xs bg-brandTealDark px-3 py-1 rounded">
+                <span id="headerUserStatus">Not Logged In</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full space-y-8">
+        
+        <!-- About Section -->
+        <section class="bg-slate-50 border border-slate-200 rounded-xl p-6 space-y-3">
+            <h1 class="text-2xl font-bold text-gray-900">ආයුබෝවන්! මම Dimath 🚀</h1>
+            <p class="text-gray-700 text-sm">මගේ Arduino Games සහ Hardware Projects වෙබ් අඩවියට සාදරයෙන් පිළිගනිමි. Feedback එවීමට පහතින් Google මඟින් Log වන්න.</p>
+            <p class="text-xs text-brandTeal font-bold">✉️ Admin Email: dimaththulsara@gmail.com</p>
+        </section>
+
+        <!-- Wix Style Google Auth / Comment Section -->
+        <section id="contact" class="max-w-md mx-auto bg-white border border-gray-200 p-8 rounded-2xl shadow-xl text-center space-y-6">
+            
+            <!-- Login View -->
+            <div id="loginBox" class="space-y-4">
+                <h3 class="text-2xl font-extrabold text-gray-900">Sign up / Log in</h3>
+                <p class="text-xs text-gray-500">Continue securely with your Google Account</p>
+                
+                <button type="button" onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-lg text-sm font-semibold text-gray-700 transition shadow-sm">
+                    <i class="fa-brands fa-google text-red-500 text-lg"></i> Continue with Google
+                </button>
+            </div>
+
+            <!-- Comment Box (Hidden until logged in) -->
+            <div id="commentSection" class="hidden space-y-4 text-left">
+                <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-gray-200">
+                    <span id="userDisplay" class="text-xs font-bold text-brandTeal">Welcome</span>
+                    <button onclick="logoutUser()" class="text-xs text-rose-600 hover:underline font-semibold">Logout</button>
+                </div>
+
+                <!-- Formspree Integration to send message to dimaththulsara@gmail.com -->
+                <form id="commentForm" action="https://formspree.io/f/your_form_id" method="POST" class="space-y-3">
+                    <input type="hidden" name="sender_email" id="formSenderEmail">
+                    <input type="hidden" name="sender_name" id="formSenderName">
+
+                    <textarea name="message" id="userComment" rows="3" required maxlength="500" placeholder="Type your project question or feedback..." class="w-full border border-gray-300 rounded-lg p-3 text-xs focus:outline-none focus:border-brandTeal"></textarea>
+
+                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200 flex items-center justify-between text-xs">
+                        <label class="flex items-center gap-2 cursor-pointer text-gray-600">
+                            <input type="checkbox" id="notRobot" required class="w-4 h-4 rounded text-brandTeal">
+                            <span>I'm not a robot</span>
+                        </label>
+                        <span class="text-[10px] text-gray-400">reCAPTCHA</span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brandTeal hover:bg-brandTealDark text-white font-bold py-2.5 rounded-lg text-xs transition">
+                        Post Comment & Notify Admin
+                    </button>
+                </form>
+            </div>
+
+            <div id="commentsList" class="space-y-3 pt-4 border-t border-gray-100 text-left"></div>
+        </section>
+    </main>
+
+    <!-- Firebase Script Logic -->
+    <script>
+        // Your actual Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEJtix_LjtlOJdu5dLQSfvvOEBPyc4va0",
+            authDomain: "arduinolab-5c1ba.firebaseapp.com",
+            projectId: "arduinolab-5c1ba",
+            storageBucket: "arduinolab-5c1ba.firebasestorage.app",
+            messagingSenderId: "384819898225",
+            appId: "1:384819898225:web:885ff890d4ddb059eab8d0",
+            measurementId: "G-06BZCW81EL"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        let currentUser = { email: '', name: '', isAdmin: false };
+
+        // Google Popup Login Function
+        window.loginWithGoogle = function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                currentUser.email = user.email;
+                currentUser.name = user.displayName;
+
+                // Check if you are the admin based on your email
+                if (user.email === "dimaththulsara@gmail.com") {
+                    currentUser.isAdmin = true;
+                }
+
+                document.getElementById('formSenderEmail').value = currentUser.email;
+                document.getElementById('formSenderName').value = currentUser.name;
+
+                document.getElementById('loginBox').classList.add('hidden');
+                document.getElementById('commentSection').classList.remove('hidden');
+                updateUserHeader();
+            }).catch((error) => {
+                alert("Google Login Failed: " + error.message);
+            });
+        };
+
+        window.logoutUser = function() {
+            auth.signOut().then(() => {
+                currentUser = { email: '', name: '', isAdmin: false };
+                document.getElementById('loginBox').classList.remove('hidden');
+                document.getElementById('commentSection').classList.add('hidden');
+                document.getElementById('headerUserStatus').innerText = "Not Logged In";
+            });
+        };
+
+        function updateUserHeader() {
+            let badge = currentUser.isAdmin ? ' <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black ml-1">ADMIN</span>' : '';
+            document.getElementById('userDisplay').innerHTML = `👤 ${currentUser.name} (${currentUser.email})${badge}`;
+            document.getElementById('headerUserStatus').innerText = currentUser.name;
+        }
+
+        // Comment form submission
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            const text = document.getElementById('userComment').value.trim();
+            if(!text) return;
+
+            const cmtElement = document.createElement('div');
+            cmtElement.className = "bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs space-y-1";
+            let badgeHtml = currentUser.isAdmin ? '<span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded font-black ml-1">ADMIN</span>' : '';
+            
+            cmtElement.innerHTML = `
+                <div class="flex justify-between font-bold text-gray-800">
+                    <span>${currentUser.name}${badgeHtml}</span>
+                    <span class="text-[10px] text-gray-400">Just now</span>
+                </div>
+                <p class="text-gray-600">${text}</p>
+            `;
+
+            document.getElementById('commentsList').prepend(cmtElement);
+            document.getElementById('userComment').value = '';
+            document.getElementById('notRobot').checked = false;
+        });
+    </script>
+</body>
+</html>

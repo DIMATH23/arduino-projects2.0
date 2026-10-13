@@ -1,0 +1,206 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    /* Background එකට Arduino ෆොටෝ එකක් සහ ඩාක් ලේයර් එකක් එකතු කිරීම */
+    background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('game.jfif');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f8fafc;
+    line-height: 1.6;
+}
+
+/* Navigation */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 8%;
+    background-color: rgba(30, 41, 59, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #00d2df;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #00d2df;
+}
+
+/* Language Switcher Button */
+.lang-toggle button {
+    background: transparent;
+    border: 1px solid #00d2df;
+    color: #00d2df;
+    padding: 5px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.lang-toggle button.active, .lang-toggle button:hover {
+    background: #00d2df;
+    color: #0f172a;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    color: #38bdf8;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Projects Section */
+.projects-section {
+    padding: 50px 8%;
+}
+
+.projects-section h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1.8rem;
+    color: #f1f5f9;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.project-card {
+    background-color: rgba(30, 41, 59, 0.95);
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid #334155;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #0284c7;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.project-card h3 {
+    margin-bottom: 12px;
+    color: #38bdf8;
+}
+
+.project-card p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-bottom: 15px;
+}
+
+.project-card h4 {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+.project-card ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Wiring Box & Text Fixes */
+.wiring-box {
+    background: #0f172a;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    border: 1px dashed #38bdf8;
+}
+
+.wiring-box ul {
+    list-style-type: disc;
+    padding-left: 15px;
+}
+
+.wiring-box li {
+    margin-bottom: 8px;
+    line-height: 1.8; /* අකුරු උඩින් යටින් කැඩී යාම වැළැක්වීමට මෙන්න මේ Line Height එක දුන්නා */
+}
+
+.card-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #00d2df;
+    color: #0f172a;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid #00d2df;
+    color: #00d2df;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(30, 41, 59, 0.95);
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 40px;
+}
+
+.hidden {
+    display: none !important;
+}
